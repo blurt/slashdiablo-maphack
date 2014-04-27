@@ -539,6 +539,9 @@ VARPTR(D2CLIENT, AutomapMode, int, 0xF34F8)
 VARPTR(D2CLIENT, Offset, POINT, 0x11CF5C)
 VARPTR(D2CLIENT, AutomapLayer, AutomapLayer*, 0x11CF28)
 
+VARPTR(D2CLIENT, xShake, int, 0x11CA6C) //ScreenShake
+VARPTR(D2CLIENT, yShake, int, 0xFC3DC) //ScreenShake
+
 VARPTR(D2CLIENT, MercStrIndex, WORD, 0xF02D8)
 VARPTR(D2CLIENT, MercReviveCost, DWORD, 0x11CEE8)
 

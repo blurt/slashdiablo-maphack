@@ -14,7 +14,7 @@ using namespace Drawing;
 Patch* weatherPatch = new Patch(Jump, D2COMMON, 0x30C36, (int)Weather_Interception, 5); //updated 1.13d
 Patch* lightingPatch = new Patch(Call, D2CLIENT, 0x233A7, (int)Lighting_Interception, 6);
 Patch* infraPatch = new Patch(Call, D2CLIENT, 0xB4A23, (int)Infravision_Interception, 7);
-//Patch* shakePatch = new Patch(Call, D2CLIENT, 0x442A2,(int)Shake_Interception, 5);
+Patch* shakePatch = new Patch(Call, D2CLIENT, 0x452F2,(int)Shake_Interception, 5);
 
 Maphack::Maphack() : Module("Maphack") {
 	revealType = MaphackRevealAct;
@@ -69,7 +69,7 @@ void Maphack::ReadConfig() {
 	Toggles["Force Light Radius"] = BH::config->ReadToggle("Force Light Radius", "None", true);
 	Toggles["Remove Weather"] = BH::config->ReadToggle("Remove Weather", "None", true);
 	Toggles["Infravision"] = BH::config->ReadToggle("Infravision", "None", true);
-	//Toggles["Remove Shake"] = BH::config->ReadToggle("Remove Shake", "None", true);
+	Toggles["Remove Shake"] = BH::config->ReadToggle("Remove Shake", "None", true);
 	Toggles["Display Level Names"] = BH::config->ReadToggle("Display Level Names", "None", true);
 }
 
@@ -100,10 +100,10 @@ void Maphack::ResetPatches() {
 	else
 		infraPatch->Remove();
 		//GameShake Patch
-	//if (Toggles["Remove Shake"].state)
-	//	shakePatch->Install();
-	//else
-	//	shakePatch->Remove();
+	if (Toggles["Remove Shake"].state)
+		shakePatch->Install();
+	else
+		shakePatch->Remove();
 
 }
 
@@ -134,8 +134,8 @@ void Maphack::OnLoad() {
 	new Checkhook(settingsTab, 4, 90, &Toggles["Infravision"].state, "Infravision");
 	new Keyhook(settingsTab, 130, 92, &Toggles["Infravision"].toggle, "");
 
-	//new Checkhook(settingsTab, 4, 105, &Toggles["Remove Shake"].state, "Remove Shake");
-	//new Keyhook(settingsTab, 130, 107, &Toggles["Remove Shake"].toggle, "");
+	new Checkhook(settingsTab, 4, 105, &Toggles["Remove Shake"].state, "Remove Shake");
+	new Keyhook(settingsTab, 130, 107, &Toggles["Remove Shake"].toggle, "");
 
 	new Checkhook(settingsTab, 4, 120, &Toggles["Display Level Names"].state, "Level Names");
 	new Keyhook(settingsTab, 130, 122, &Toggles["Display Level Names"].toggle, "");
@@ -182,7 +182,7 @@ void Maphack::OnUnload() {
 	lightingPatch->Remove();
 	weatherPatch->Remove();
 	infraPatch->Remove();
-	//shakePatch->Remove();
+	shakePatch->Remove();
 }
 
 void Maphack::OnLoop() {
@@ -656,7 +656,7 @@ void __declspec(naked) Infravision_Interception()
 VOID __stdcall Shake_Interception(LPDWORD lpX, LPDWORD lpY)
 {
 
-	//*p_D2CLIENT_xShake = 0;
-	//*p_D2CLIENT_yShake = 0;
+	*p_D2CLIENT_xShake = 0;
+	*p_D2CLIENT_yShake = 0;
 
 }
